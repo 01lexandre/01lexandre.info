@@ -127,6 +127,10 @@ export default function Home() {
                 url: "https://myvent.online",
                 status: "DEVELOPMENT",
               },
+              {
+                url: "https://live.bizu.ai",
+                status: "DEVELOPMENT",
+              },
             ]}
           />
         </AnimatedSection>
