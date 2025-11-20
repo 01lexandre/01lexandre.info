@@ -1,36 +1,96 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 👋 Hey there! I'm Carlos Alexandre
 
-## Getting Started
+<div align="center">
 
-First, run the development server:
+**Developer from Brazil** 🇧🇷
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+*Head of Products • Multidisciplinary Professional*
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+[![Instagram](https://img.shields.io/badge/Instagram-01lexandre-E4405F?style=flat&logo=instagram&logoColor=white)](https://instagram.com/01lexandre)
+[![GitHub](https://img.shields.io/badge/GitHub-01lexandre-181717?style=flat&logo=github&logoColor=white)](https://github.com/01lexandre)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-01lexandre-0077B5?style=flat&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/01lexandre)
+[![Website](https://img.shields.io/badge/Website-01lexandre.info-000000?style=flat)](https://01lexandre.info)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+</div>
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 🧑‍💼 About Me
 
-To learn more about Next.js, take a look at the following resources:
+I'm **Carlos Alexandre**, Magda's husband and Thomas's father. A multidisciplinary professional with **over a decade of experience** leading products at the intersection of technology and business.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+As **Head of Products**, I combine strategic vision with real technical execution, from discovery to architecture and development.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 💡 My Philosophy
 
-## Deploy on Vercel
+> *"I believe that developing a product is easy, what's difficult is developing a product that truly solves a problem."*
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+My differentiator is **transforming complex problems into scalable solutions**.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## 🚀 Experience & Expertise
+
+I have led and co-created several digital products:
+
+- **ERPs** - Enterprise Resource Planning systems
+- **SaaS Platforms** - Software as a Service solutions
+- **Automation Systems** - Process automation and optimization
+- **Chatbots** - Conversational AI and automation
+- **Applied AI** - Artificial Intelligence implementations
+
+---
+
+## 🛠️ Technical Stack
+
+### Frontend
+- **React** - UI library
+- **Next.js** - React framework
+- **TypeScript** - Type-safe JavaScript
+
+### Backend
+- **Node.js** - JavaScript runtime
+- **TypeScript** - Type-safe development
+
+### Cloud & Infrastructure
+- **AWS** - Amazon Web Services
+
+### Methodologies
+- **Agile** - Agile development methodologies
+
+---
+
+## 🌟 Featured Projects
+
+### [Bizu.ai](https://bizu.ai)
+**Status:** 🟢 ACTIVE
+
+### [MyVent.online](https://myvent.online)
+**Status:** 🟡 DEVELOPMENT
+
+---
+
+## 📱 Connect With Me
+
+- 📷 [Instagram](https://instagram.com/01lexandre)
+- 💼 [LinkedIn](https://www.linkedin.com/in/01lexandre)
+- 💻 [GitHub](https://github.com/01lexandre)
+- 🌐 [Website](https://01lexandre.info)
+
+---
+
+## ☕ Support
+
+If you like my work, consider buying me a coffee!
+
+[![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/01lexandre)
+
+---
+
+<div align="center">
+
+**Made with ❤️ by Carlos Alexandre**
+
+© 2024 01.lexandre. All rights reserved.
+
+</div>
