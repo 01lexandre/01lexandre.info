@@ -204,41 +204,16 @@ export async function GET() {
   ctx.fillStyle = gradient;
   ctx.fillRect(0, 0, width, height);
 
-  // Porcentagem 1 - tentando usar fonte (pode não funcionar se fonte não estiver disponível)
+  // Porcentagem - desenha manualmente usando canvas paths (sempre funciona)
   const porcentagemX = width / 2;
-  const porcentagemY1 = paddingY + porcentagemSize / 2;
+  const porcentagemY = paddingY + porcentagemSize / 2;
   const porcentagemColor = 'rgba(253, 230, 138, 0.4)';
   
-  // Tenta usar fonte
-  ctx.fillStyle = porcentagemColor;
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  const fontOptions = ['DejaVu Sans', 'Liberation Sans', 'Ubuntu', 'Arial', 'Helvetica', 'Sans'];
-  let fontUsed = false;
-  for (const font of fontOptions) {
-    try {
-      ctx.font = `${porcentagemSize}px "${font}"`;
-      ctx.fillText(`${porcentagemPassou}%`, porcentagemX, porcentagemY1);
-      fontUsed = true;
-      break;
-    } catch (e) {
-      continue;
-    }
-  }
-  
-  // Se fonte não funcionou, desenha quadrado indicador
-  if (!fontUsed) {
-    ctx.fillStyle = porcentagemColor;
-    ctx.fillRect(porcentagemX - porcentagemSize, porcentagemY1 - porcentagemSize / 2, porcentagemSize * 2, porcentagemSize);
-  }
-  
-  // Porcentagem 2 - desenha manualmente usando canvas paths (sempre funciona)
-  const porcentagemY2 = porcentagemY1 + porcentagemSize + 50; // Espaçamento entre as duas
-  drawNumberManual(ctx, porcentagemX, porcentagemY2, porcentagemPassou, porcentagemSize, porcentagemColor);
+  drawNumberManual(ctx, porcentagemX, porcentagemY, porcentagemPassou, porcentagemSize, porcentagemColor);
 
-  // Grid de dias (começa depois das duas porcentagens)
+  // Grid de dias
   const gridStartX = (width - gridWidth) / 2;
-  const gridStartY = porcentagemY2 + porcentagemSize / 2 + porcentagemMarginBottom;
+  const gridStartY = paddingY + porcentagemSize + porcentagemMarginBottom;
 
   linhas.forEach((linha, linhaIdx) => {
     const linhaY = gridStartY + linhaIdx * (dotSize + gapY);
