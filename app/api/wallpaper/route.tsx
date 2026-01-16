@@ -128,7 +128,7 @@ export async function GET() {
   const buffer = canvas.toBuffer('image/png');
 
   // Retorna imagem
-  return new Response(buffer, {
+  return new Response(buffer as unknown as BodyInit, {
     headers: {
       'Content-Type': 'image/png',
       'Cache-Control': 'no-cache, no-store, must-revalidate',
