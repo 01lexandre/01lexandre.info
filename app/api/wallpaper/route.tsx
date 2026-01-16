@@ -4,7 +4,7 @@ export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 // Função para desenhar dígitos manualmente usando paths (sem depender de fonte)
-function drawDigit(ctx: CanvasRenderingContext2D, x: number, y: number, digit: string, size: number, color: string) {
+function drawDigit(ctx: any, x: number, y: number, digit: string, size: number, color: string) {
   const w = size * 0.35; // largura do dígito
   const h = size * 0.9; // altura do dígito
   const t = size * 0.08; // espessura da linha
@@ -93,7 +93,7 @@ function drawDigit(ctx: CanvasRenderingContext2D, x: number, y: number, digit: s
 }
 
 // Função para desenhar o símbolo %
-function drawPercent(ctx: CanvasRenderingContext2D, x: number, y: number, size: number, color: string) {
+function drawPercent(ctx: any, x: number, y: number, size: number, color: string) {
   const r = size * 0.12;
   const spacing = size * 0.25;
   
@@ -120,7 +120,7 @@ function drawPercent(ctx: CanvasRenderingContext2D, x: number, y: number, size: 
 }
 
 // Função principal para desenhar número completo
-function drawNumberManual(ctx: CanvasRenderingContext2D, x: number, y: number, number: number, size: number, color: string) {
+function drawNumberManual(ctx: any, x: number, y: number, number: number, size: number, color: string) {
   const digits = String(number).split('');
   const digitWidth = size * 0.5;
   const percentWidth = size * 0.3;
