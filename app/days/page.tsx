@@ -1,12 +1,9 @@
 'use client';
 
 import { Circle, Star } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
-import html2canvas from 'html2canvas';
+import { useEffect } from 'react';
 
 export default function Dias2026() {
-  const pageRef = useRef<HTMLDivElement>(null);
-  const [captureReady, setCaptureReady] = useState(false);
   // 2026 é um ano bissexto, então tem 366 dias
   const totalDias = 366;
   
@@ -44,66 +41,22 @@ export default function Dias2026() {
   ];
 
   useEffect(() => {
-    // Aguarda a página renderizar completamente antes de capturar
+    // Faz download da imagem gerada no servidor
     const timer = setTimeout(() => {
-      setCaptureReady(true);
+      const hoje = new Date();
+      const dataFormatada = `${hoje.getDate()}-${hoje.getMonth() + 1}-${hoje.getFullYear()}`;
+      
+      const link = document.createElement('a');
+      link.href = '/api/wallpaper';
+      link.download = `dias-2026-${dataFormatada}.png`;
+      link.click();
     }, 1000);
 
     return () => clearTimeout(timer);
   }, []);
 
-  useEffect(() => {
-    if (!captureReady || !pageRef.current) return;
-
-    const captureAndDownload = async () => {
-      try {
-        const targetWidth = 1179;
-        const targetHeight = 2556;
-        
-        const element = pageRef.current!;
-        const elementWidth = element.offsetWidth;
-        const elementHeight = element.offsetHeight;
-        
-        // Calcula o scale necessário para alcançar o tamanho desejado
-        const scaleX = targetWidth / elementWidth;
-        const scaleY = targetHeight / elementHeight;
-        const scale = Math.max(scaleX, scaleY);
-
-        const canvas = await html2canvas(element, {
-          backgroundColor: '#000000',
-          width: targetWidth,
-          height: targetHeight,
-          scale: scale,
-          useCORS: true,
-          logging: false,
-          windowWidth: targetWidth,
-          windowHeight: targetHeight,
-        });
-
-        // Converte para blob e faz download
-        canvas.toBlob((blob) => {
-          if (blob) {
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            const hoje = new Date();
-            const dataFormatada = `${hoje.getDate()}-${hoje.getMonth() + 1}-${hoje.getFullYear()}`;
-            link.download = `dias-2026-${dataFormatada}.png`;
-            link.href = url;
-            link.click();
-            URL.revokeObjectURL(url);
-          }
-        });
-      } catch (error) {
-        console.error('Erro ao capturar tela:', error);
-      }
-    };
-
-    captureAndDownload();
-  }, [captureReady]);
-
   return (
     <div 
-      ref={pageRef}
       style={{
         minHeight: '100vh',
         background: 'linear-gradient(135deg, #0a0a0a 0%, #1a1410 20%, #0a0604 40%, #000000 60%, #1a1008 80%, #000000 100%)',
