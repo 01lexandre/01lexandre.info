@@ -3,29 +3,139 @@ import { createCanvas } from 'canvas';
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
-// Função para desenhar número usando formas básicas
-function drawNumber(ctx: any, x: number, y: number, number: number, size: number, color: string) {
-  const digitWidth = size * 0.6;
-  const digitHeight = size * 1.2;
-  const strokeWidth = size * 0.1;
+// Função para desenhar dígitos manualmente usando paths (sem depender de fonte)
+function drawDigit(ctx: CanvasRenderingContext2D, x: number, y: number, digit: string, size: number, color: string) {
+  const w = size * 0.35; // largura do dígito
+  const h = size * 0.9; // altura do dígito
+  const t = size * 0.08; // espessura da linha
   
   ctx.fillStyle = color;
   ctx.strokeStyle = color;
-  ctx.lineWidth = strokeWidth;
+  ctx.lineWidth = t;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
   
+  const cx = x;
+  const top = y - h / 2;
+  const middle = y;
+  const bottom = y + h / 2;
+  const left = cx - w / 2;
+  const right = cx + w / 2;
+  
+  // Desenha cada dígito usando paths
+  ctx.beginPath();
+  
+  switch (digit) {
+    case '0':
+      ctx.arc(cx, top + h * 0.3, w * 0.4, Math.PI, 0, false);
+      ctx.arc(cx, bottom - h * 0.3, w * 0.4, 0, Math.PI, false);
+      ctx.closePath();
+      ctx.stroke();
+      break;
+    case '1':
+      ctx.moveTo(cx, top);
+      ctx.lineTo(cx, bottom);
+      ctx.stroke();
+      break;
+    case '2':
+      ctx.arc(cx, top + h * 0.25, w * 0.35, Math.PI, 0, false);
+      ctx.lineTo(right, middle);
+      ctx.lineTo(left, middle);
+      ctx.arc(cx, bottom - h * 0.25, w * 0.35, 0, Math.PI, false);
+      ctx.stroke();
+      break;
+    case '3':
+      ctx.arc(cx, top + h * 0.25, w * 0.35, Math.PI, 0, false);
+      ctx.arc(cx, middle, w * 0.3, Math.PI, 0, false);
+      ctx.arc(cx, bottom - h * 0.25, w * 0.35, Math.PI, 0, false);
+      ctx.stroke();
+      break;
+    case '4':
+      ctx.moveTo(left, top);
+      ctx.lineTo(left, middle);
+      ctx.lineTo(right, middle);
+      ctx.moveTo(right, top);
+      ctx.lineTo(right, bottom);
+      ctx.stroke();
+      break;
+    case '5':
+      ctx.moveTo(right, top);
+      ctx.lineTo(left, top);
+      ctx.lineTo(left, middle);
+      ctx.arc(cx, middle, w * 0.3, Math.PI, 0, false);
+      ctx.arc(cx, bottom - h * 0.25, w * 0.35, 0, Math.PI, false);
+      ctx.stroke();
+      break;
+    case '6':
+      ctx.arc(left + w * 0.3, middle, w * 0.25, Math.PI, 0, true);
+      ctx.lineTo(left, middle);
+      ctx.arc(cx, bottom - h * 0.25, w * 0.35, 0, Math.PI, false);
+      ctx.stroke();
+      break;
+    case '7':
+      ctx.moveTo(left, top);
+      ctx.lineTo(right, top);
+      ctx.lineTo(cx, bottom);
+      ctx.stroke();
+      break;
+    case '8':
+      ctx.arc(cx, top + h * 0.25, w * 0.3, 0, Math.PI * 2, false);
+      ctx.arc(cx, bottom - h * 0.25, w * 0.3, 0, Math.PI * 2, false);
+      ctx.stroke();
+      break;
+    case '9':
+      ctx.arc(right - w * 0.3, middle, w * 0.25, 0, Math.PI, true);
+      ctx.lineTo(right, middle);
+      ctx.arc(cx, top + h * 0.25, w * 0.35, Math.PI, 0, false);
+      ctx.stroke();
+      break;
+  }
+}
+
+// Função para desenhar o símbolo %
+function drawPercent(ctx: CanvasRenderingContext2D, x: number, y: number, size: number, color: string) {
+  const r = size * 0.12;
+  const spacing = size * 0.25;
+  
+  ctx.fillStyle = color;
+  
+  // Círculo superior
+  ctx.beginPath();
+  ctx.arc(x, y - spacing, r, 0, Math.PI * 2);
+  ctx.fill();
+  
+  // Linha diagonal
+  ctx.strokeStyle = color;
+  ctx.lineWidth = size * 0.08;
+  ctx.lineCap = 'round';
+  ctx.beginPath();
+  ctx.moveTo(x - r, y - spacing + r);
+  ctx.lineTo(x + r, y + spacing - r);
+  ctx.stroke();
+  
+  // Círculo inferior
+  ctx.beginPath();
+  ctx.arc(x, y + spacing, r, 0, Math.PI * 2);
+  ctx.fill();
+}
+
+// Função principal para desenhar número completo
+function drawNumberManual(ctx: CanvasRenderingContext2D, x: number, y: number, number: number, size: number, color: string) {
   const digits = String(number).split('');
-  const totalWidth = digits.length * digitWidth;
-  let currentX = x - totalWidth / 2;
+  const digitWidth = size * 0.5;
+  const percentWidth = size * 0.3;
+  const totalWidth = digits.length * digitWidth + percentWidth + size * 0.1;
+  const startX = x - totalWidth / 2;
   
-  digits.forEach(digit => {
-    // Desenha cada dígito usando formas básicas (0-9)
-    // Por simplicidade, vou tentar usar fillText primeiro
-    ctx.fillText(digit, currentX + digitWidth / 2, y);
-    currentX += digitWidth;
+  // Desenha cada dígito
+  digits.forEach((digit, idx) => {
+    const digitX = startX + idx * digitWidth + digitWidth / 2;
+    drawDigit(ctx, digitX, y, digit, size, color);
   });
   
   // Desenha %
-  ctx.fillText('%', currentX + digitWidth / 2, y);
+  const percentX = startX + digits.length * digitWidth + percentWidth / 2;
+  drawPercent(ctx, percentX, y, size, color);
 }
 
 export async function GET() {
@@ -94,45 +204,41 @@ export async function GET() {
   ctx.fillStyle = gradient;
   ctx.fillRect(0, 0, width, height);
 
-  // Porcentagem - tenta múltiplas fontes do sistema Linux
+  // Porcentagem 1 - tentando usar fonte (pode não funcionar se fonte não estiver disponível)
   const porcentagemX = width / 2;
-  const porcentagemY = paddingY + porcentagemSize / 2;
-  ctx.fillStyle = 'rgba(253, 230, 138, 0.4)';
+  const porcentagemY1 = paddingY + porcentagemSize / 2;
+  const porcentagemColor = 'rgba(253, 230, 138, 0.4)';
+  
+  // Tenta usar fonte
+  ctx.fillStyle = porcentagemColor;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  
-  // Lista de fontes comuns no Linux (Vercel usa Ubuntu/Debian)
-  const fontOptions = [
-    'DejaVu Sans',
-    'Liberation Sans',
-    'Ubuntu',
-    'Arial',
-    'Helvetica',
-    'Sans',
-  ];
-  
-  let textDrawn = false;
+  const fontOptions = ['DejaVu Sans', 'Liberation Sans', 'Ubuntu', 'Arial', 'Helvetica', 'Sans'];
+  let fontUsed = false;
   for (const font of fontOptions) {
     try {
       ctx.font = `${porcentagemSize}px "${font}"`;
-      const text = `${porcentagemPassou}%`;
-      ctx.fillText(text, porcentagemX, porcentagemY);
-      textDrawn = true;
+      ctx.fillText(`${porcentagemPassou}%`, porcentagemX, porcentagemY1);
+      fontUsed = true;
       break;
     } catch (e) {
-      // Tenta próxima fonte
       continue;
     }
   }
   
-  // Se nenhuma fonte funcionou, desenha número manualmente (fallback simples)
-  if (!textDrawn) {
-    drawNumber(ctx, porcentagemX, porcentagemY, porcentagemPassou, porcentagemSize, 'rgba(253, 230, 138, 0.4)');
+  // Se fonte não funcionou, desenha quadrado indicador
+  if (!fontUsed) {
+    ctx.fillStyle = porcentagemColor;
+    ctx.fillRect(porcentagemX - porcentagemSize, porcentagemY1 - porcentagemSize / 2, porcentagemSize * 2, porcentagemSize);
   }
+  
+  // Porcentagem 2 - desenha manualmente usando canvas paths (sempre funciona)
+  const porcentagemY2 = porcentagemY1 + porcentagemSize + 50; // Espaçamento entre as duas
+  drawNumberManual(ctx, porcentagemX, porcentagemY2, porcentagemPassou, porcentagemSize, porcentagemColor);
 
-  // Grid de dias
+  // Grid de dias (começa depois das duas porcentagens)
   const gridStartX = (width - gridWidth) / 2;
-  const gridStartY = paddingY + porcentagemSize + porcentagemMarginBottom;
+  const gridStartY = porcentagemY2 + porcentagemSize / 2 + porcentagemMarginBottom;
 
   linhas.forEach((linha, linhaIdx) => {
     const linhaY = gridStartY + linhaIdx * (dotSize + gapY);
