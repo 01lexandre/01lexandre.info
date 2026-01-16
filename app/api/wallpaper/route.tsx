@@ -73,10 +73,23 @@ export async function GET() {
   const porcentagemX = width / 2;
   const porcentagemY = paddingY + porcentagemSize / 2;
   ctx.fillStyle = 'rgba(253, 230, 138, 0.4)';
-  ctx.font = `normal ${porcentagemSize}px Arial`;
+  
+  // Tenta múltiplas fontes que podem existir no sistema
+  const fontFamily = ['Helvetica', 'Arial', 'DejaVu Sans', 'Liberation Sans', 'sans-serif'].join(', ');
+  ctx.font = `${porcentagemSize}px ${fontFamily}`;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.fillText(`${porcentagemPassou}%`, porcentagemX, porcentagemY);
+  
+  // Desenha o texto
+  try {
+    ctx.fillText(`${porcentagemPassou}%`, porcentagemX, porcentagemY);
+  } catch (error) {
+    // Fallback: desenha números manualmente se fonte falhar
+    const text = `${porcentagemPassou}%`;
+    const metrics = ctx.measureText(text);
+    const textWidth = metrics.width;
+    ctx.fillText(text, porcentagemX, porcentagemY);
+  }
 
   // Grid de dias
   const gridStartX = (width - gridWidth) / 2;
