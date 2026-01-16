@@ -180,14 +180,14 @@ export async function GET() {
   const width = 1179;
   const height = 2556;
   const paddingX = 200;
-  const paddingY = 250;
+  const paddingY = 300;
   const gridWidth = 800;
   const dotSize = 30;
   const diamondSize = 25;
   const gapX = 20;
   const gapY = 24;
   const porcentagemSize = 180;
-  const porcentagemMarginBottom = 150;
+  const porcentagemMarginBottom = 350;
 
   // Cria canvas
   const canvas = createCanvas(width, height);
