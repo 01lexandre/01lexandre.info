@@ -1,6 +1,7 @@
-import { ImageResponse } from '@vercel/og';
+import { createCanvas } from 'canvas';
 
-export const runtime = 'edge';
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 export async function GET() {
   // Cálculos dos dias
@@ -40,93 +41,97 @@ export async function GET() {
     linhas.push(dias.slice(i, i + 15));
   }
 
-  return new ImageResponse(
-    (
-      <div
-        style={{
-          width: '1179px',
-          height: '2556px',
-          background: 'linear-gradient(135deg, #0a0a0a 0%, #1a1410 20%, #0a0604 40%, #000000 60%, #1a1008 80%, #000000 100%)',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: '250px 200px',
-        }}
-      >
-        {/* Porcentagem */}
-        <div
-          style={{
-            fontSize: '180px',
-            color: 'rgba(253, 230, 138, 0.4)',
-            fontWeight: 'normal',
-            display: 'flex',
-            marginBottom: '150px',
-          }}
-        >
-          {porcentagemPassou}%
-        </div>
+  // Dimensões
+  const width = 1179;
+  const height = 2556;
+  const paddingX = 200;
+  const paddingY = 250;
+  const gridWidth = 800;
+  const dotSize = 30;
+  const diamondSize = 25;
+  const gapX = 20;
+  const gapY = 24;
+  const porcentagemSize = 180;
+  const porcentagemMarginBottom = 150;
 
-        {/* Grid de dias */}
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '24px',
-            width: '800px',
-          }}
-        >
-          {linhas.map((linha, linhaIdx) => (
-            <div
-              key={linhaIdx}
-              style={{
-                display: 'flex',
-                gap: '8px',
-                justifyContent: 'center',
-              }}
-            >
-              {linha.map((dia) => {
-                if (dia.especial) {
-                  // Diamante (quadrado rotacionado 45°) para dias especiais
-                  return (
-                    <div
-                      key={dia.numero}
-                      style={{
-                        display: 'flex',
-                        width: '25px',
-                        height: '25px',
-                        backgroundColor: dia.passou ? '#FFD700' : '#2a2a2a',
-                        transform: 'rotate(45deg)',
-                        boxShadow: dia.passou ? '0 0 6px rgba(255, 215, 0, 0.4)' : 'none',
-                      }}
-                    />
-                  );
-                } else {
-                  // Círculo para dias normais
-                  return (
-                    <div
-                      key={dia.numero}
-                      style={{
-                        display: 'flex',
-                        width: '30px',
-                        height: '30px',
-                        borderRadius: '50%',
-                        backgroundColor: dia.passou ? '#FFD700' : 'transparent',
-                        border: dia.passou ? 'none' : '1.5px solid #4a4a4a',
-                        boxShadow: dia.passou ? '0 0 6px rgba(255, 215, 0, 0.4)' : 'none',
-                      }}
-                    />
-                  );
-                }
-              })}
-            </div>
-          ))}
-        </div>
-      </div>
-    ),
-    {
-      width: 1179,
-      height: 2556,
-    }
-  );
+  // Cria canvas
+  const canvas = createCanvas(width, height);
+  const ctx = canvas.getContext('2d');
+
+  // Background degradê
+  const gradient = ctx.createLinearGradient(0, 0, width, height);
+  gradient.addColorStop(0, '#0a0a0a');
+  gradient.addColorStop(0.2, '#1a1410');
+  gradient.addColorStop(0.4, '#0a0604');
+  gradient.addColorStop(0.6, '#000000');
+  gradient.addColorStop(0.8, '#1a1008');
+  gradient.addColorStop(1, '#000000');
+  ctx.fillStyle = gradient;
+  ctx.fillRect(0, 0, width, height);
+
+  // Porcentagem
+  const porcentagemX = width / 2;
+  const porcentagemY = paddingY + porcentagemSize / 2;
+  ctx.fillStyle = 'rgba(253, 230, 138, 0.4)';
+  ctx.font = `normal ${porcentagemSize}px Arial`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(`${porcentagemPassou}%`, porcentagemX, porcentagemY);
+
+  // Grid de dias
+  const gridStartX = (width - gridWidth) / 2;
+  const gridStartY = paddingY + porcentagemSize + porcentagemMarginBottom;
+
+  linhas.forEach((linha, linhaIdx) => {
+    const linhaY = gridStartY + linhaIdx * (dotSize + gapY);
+    
+    linha.forEach((dia, colIdx) => {
+      const totalDotsWidth = (linha.length - 1) * gapX + linha.length * dotSize;
+      const startX = gridStartX + (gridWidth - totalDotsWidth) / 2;
+      const dotX = startX + colIdx * (dotSize + gapX) + dotSize / 2;
+      const dotY = linhaY + dotSize / 2;
+
+      if (dia.especial) {
+        // Diamante (quadrado rotacionado)
+        ctx.save();
+        ctx.translate(dotX, dotY);
+        ctx.rotate(Math.PI / 4);
+        if (dia.passou) {
+          ctx.shadowColor = 'rgba(255, 215, 0, 0.4)';
+          ctx.shadowBlur = 6;
+        }
+        ctx.fillStyle = dia.passou ? '#FFD700' : '#2a2a2a';
+        ctx.fillRect(-diamondSize / 2, -diamondSize / 2, diamondSize, diamondSize);
+        ctx.restore();
+      } else {
+        // Círculo
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(dotX, dotY, dotSize / 2, 0, Math.PI * 2);
+        
+        if (dia.passou) {
+          ctx.shadowColor = 'rgba(255, 215, 0, 0.4)';
+          ctx.shadowBlur = 6;
+          ctx.fillStyle = '#FFD700';
+          ctx.fill();
+        } else {
+          ctx.strokeStyle = '#4a4a4a';
+          ctx.lineWidth = 1.5;
+          ctx.stroke();
+        }
+        ctx.restore();
+      }
+    });
+  });
+
+  // Converte para buffer
+  const buffer = canvas.toBuffer('image/png');
+
+  // Retorna imagem
+  return new Response(buffer, {
+    headers: {
+      'Content-Type': 'image/png',
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
+    },
+  });
 }
