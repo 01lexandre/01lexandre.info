@@ -9,6 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@napi-rs/canvas": "^0.1.88",
     "@vercel/og": "^0.8.6",
     "canvas": "^3.2.1",
     "framer-motion": "^12.23.24",

@@ -3,6 +3,31 @@ import { createCanvas } from 'canvas';
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
+// Função para desenhar número usando formas básicas
+function drawNumber(ctx: any, x: number, y: number, number: number, size: number, color: string) {
+  const digitWidth = size * 0.6;
+  const digitHeight = size * 1.2;
+  const strokeWidth = size * 0.1;
+  
+  ctx.fillStyle = color;
+  ctx.strokeStyle = color;
+  ctx.lineWidth = strokeWidth;
+  
+  const digits = String(number).split('');
+  const totalWidth = digits.length * digitWidth;
+  let currentX = x - totalWidth / 2;
+  
+  digits.forEach(digit => {
+    // Desenha cada dígito usando formas básicas (0-9)
+    // Por simplicidade, vou tentar usar fillText primeiro
+    ctx.fillText(digit, currentX + digitWidth / 2, y);
+    currentX += digitWidth;
+  });
+  
+  // Desenha %
+  ctx.fillText('%', currentX + digitWidth / 2, y);
+}
+
 export async function GET() {
   // Cálculos dos dias
   const hoje = new Date();
@@ -69,16 +94,41 @@ export async function GET() {
   ctx.fillStyle = gradient;
   ctx.fillRect(0, 0, width, height);
 
-  // Porcentagem - usa fonte padrão disponível em Linux (Vercel)
+  // Porcentagem - tenta múltiplas fontes do sistema Linux
   const porcentagemX = width / 2;
   const porcentagemY = paddingY + porcentagemSize / 2;
   ctx.fillStyle = 'rgba(253, 230, 138, 0.4)';
-  
-  // Usa fonte Sans que geralmente existe em sistemas Linux
-  ctx.font = `${porcentagemSize}px Sans`;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.fillText(`${porcentagemPassou}%`, porcentagemX, porcentagemY);
+  
+  // Lista de fontes comuns no Linux (Vercel usa Ubuntu/Debian)
+  const fontOptions = [
+    'DejaVu Sans',
+    'Liberation Sans',
+    'Ubuntu',
+    'Arial',
+    'Helvetica',
+    'Sans',
+  ];
+  
+  let textDrawn = false;
+  for (const font of fontOptions) {
+    try {
+      ctx.font = `${porcentagemSize}px "${font}"`;
+      const text = `${porcentagemPassou}%`;
+      ctx.fillText(text, porcentagemX, porcentagemY);
+      textDrawn = true;
+      break;
+    } catch (e) {
+      // Tenta próxima fonte
+      continue;
+    }
+  }
+  
+  // Se nenhuma fonte funcionou, desenha número manualmente (fallback simples)
+  if (!textDrawn) {
+    drawNumber(ctx, porcentagemX, porcentagemY, porcentagemPassou, porcentagemSize, 'rgba(253, 230, 138, 0.4)');
+  }
 
   // Grid de dias
   const gridStartX = (width - gridWidth) / 2;
